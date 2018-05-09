@@ -1,0 +1,56 @@
+
+#include <Servo.h>
+
+Servo myservo;
+
+int travelSeconds     = 20;
+//int motorSpeed        = round((float)(travelSeconds*1000)/180.0);
+int motorSpeed        = 220;//220=40s
+int motorReturnSpeed  = 5;//1 -> Faster
+
+int ledPin            = 13;
+int pushPin           = 9;
+int motorPin          = 10;
+int pos               = 0;
+int pulsoMin          = 650;  // Pulso en us para girar un ángulo de 0º
+int pulsoMax          = 2550; // Pulso en us para girar un ángulo de 180º
+
+int minAngle          = 36;
+int maxAngle          = minAngle + 90;
+
+
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+  pinMode(pushPin, INPUT);
+  myservo.attach(motorPin,pulsoMin,pulsoMax);
+  myservo.write(minAngle);
+}
+
+void loop(){  
+  if ( digitalRead(pushPin) == HIGH )
+  {
+    makeAwalk();
+  }
+  else
+  {
+    digitalWrite(ledPin, LOW);
+  }
+}
+
+void makeAwalk()
+{
+  for(pos=minAngle; pos<=maxAngle; pos++)
+  {
+    myservo.write(pos);
+    delay(motorSpeed);
+  }
+
+  for(pos=maxAngle; pos>=minAngle; pos--)
+  {
+    myservo.write(pos);
+    delay(motorReturnSpeed);
+  }
+}
+
+
